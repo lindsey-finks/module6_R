@@ -80,13 +80,13 @@ There are a total of 27 questions embedded throughout this module, many of which
 **Q.1 (Shiny)** What is meant by the term 'uncertainty' in the context of ecological forecasting?
 
 **Answer Q.1**
-
+Uncertainty refers to the range of possible future outcomes due to the inability of being 100% sure of conditions at this point in time. 
 
 
 **Q.2 (Shiny)** How do you think knowing the uncertainty in a forecast helps natural resource managers? For example, if a drinking water manager received a toxic algal bloom forecast with high vs. low uncertainty in a bloom prediction, how might that affect their decision-making?
 
 **Answer Q.2**
-
+Uncertainty can help natural resource managers transmit forecasts to the public in an efficient way. If a forecast has high uncertainty, that information can be relayed with the forecast to avoid giving false predictions.
 
 
 ## Set-up
@@ -119,11 +119,11 @@ Lake Barco is one of the lake sites in the U.S. National Ecological Observatory 
 
 **Answer Q.3**
 
-Four-letter site identifier:  
-Latitude:  
-Longitude:  
-Lake area (km2):  
-Elevation (m):  
+Four-letter site identifier:  BARC    
+Latitude:  29.675982
+Longitude:  -82.008414
+Lake area (km2):  0.13km2
+Elevation (m):  27m
 
 
 ### Water Temperature
@@ -139,8 +139,7 @@ Being able to predict how water temperature may change in the short-term (up to 
 **Q.4 (Shiny)** List two potential impacts on lakes and inland water bodies as a result of increasing water temperature.
 
 **Answer Q.4**
-
-
+  Lakes and inland water bodies can experience alterations chlorophyll-a concentrations or alterations in patterns of underwater ecosystems as a result of increasing water temperature.
 
 
 Read in and view lake data.
@@ -158,7 +157,7 @@ plot_lake_data(lake_df)
 **Q.5 (Shiny)** Do you think there is a strong relationship between air temperature and water temperature at this lake? 
 
 **Answer Q.5**
-
+It looks like there is a relationship between air temperature and water temperature in this lake. Generally, when air temperature rises water temperature rises.
 
 ## Objective 2. Read in and visualize an air temperature forecast for Lake Barco 
 
@@ -210,7 +209,7 @@ plot_airtemp_forecast(lake_obs, weather_forecast, forecast_start_date)
 **Q.6 (Rmd)** Why are there multiple gray lines on the plot above? What do they represent? Be as specific as you can.  
 
 **Answer Q.6**
-
+  The gray lines on the plot represent ensemble members and they are potential outcomes of the forecast using different initial input conditions.
 
 ## Objective 3. Build a linear regression forecast model 
 
@@ -318,17 +317,17 @@ mod_predictions_watertemp(lake_df2, pred)
 **Q.7 (Rmd)** Describe the structure of the multiple linear regression model in your own words. How is water temperature being predicted?  
 
 **Answer Q.7**
-
+  The multiple linear regression model predicts water temperature by relating daily water temperature by water temperature lagged by one day as coefficients then relates air temperature.
 
 **Q.8 (Rmd)** Examine the values of the fitted model parameters (`coeffs`). What does this tell you about the relative importance of past water temperature and current air temperature in driving current water temperature? Examine the standard errors of the parameters (`params_se`). What do the standard errors tell you about how confident we are in the fitted model parameter values?
 
 **Answer Q.8**
-
+  Past water temperature drives current water temperature while current air temperature has somewhat of an influence on current water temperature. The standard errors for both parameters are relatively low. If the standard error is closer to 1, there is less confidence in the fitted model parameter values.
 
 **Q.9 (Rmd)** Assess the model fit. Examine the values of `r2`, `err`, and `rmse`, as well as the plot showing the model fit and observations. What does this tell you about model performance?  
 
 **Answer Q.9** 
-
+  With a high R2 of 0.9, the model performed well against the observations. 
 
 ## Objective 4. Generate a deterministic forecast (without uncertainty)
 
@@ -394,12 +393,12 @@ for(i in 2:8){
 ```{r}
 starting_temperature <- 15.2 #degrees C
 
-water_temperature <- rep(NA, 8)
+water_temperature <- rep(NA, 11)
 
 water_temperature[1] <- starting_temperature
 water_temperature
 
-for(i in 2:8){
+for(i in 2:11){
   water_temperature[i] = water_temperature[i-1] + 0.1 #degrees C
   print(water_temperature[i])
 }
@@ -481,7 +480,7 @@ plot_forecast(lake_obs,
 **Q.11 (Rmd)** Compare the water temperature forecast plot above to the plot of the NOAA GEFS air temperature forecast. Does the forecasted water temperature track the forecasted air temperature, and why might this be?  
 
 
-**Answer Q.11** 
+**Answer Q.11** The deterministic forecast follows the trend of ensemble members in the NOAA GEFS forecast. The forecast for water temperature on Oct. 1 has high uncertainty amongst ensemble members, but the deterministic forcast looks to be the mean of ensemble members from the NOAA GEFS plot.
 
 
 ### What is wrong with deterministic forecasts?
@@ -551,15 +550,14 @@ plot_forecast(lake_obs,
 
 **Q.12 (Shiny)** How does forecast uncertainty change further into the future?
 
-**Answer Q.12**
+**Answer Q.12** The range of potential forecasts becomes larger and forecast uncertainty becomes larger.
 
 
 
 **Q.13 (Rmd)** Compare the plot above of the probabilistic forecast with driver uncertainty to the plot of the deterministic forecast. How do the differences in these two forecasts affect your understanding of what water temperatures are likely to be during the week of the forecast?  
 
 **Answer Q.13** 
-
-
+  The deterministic forecast is towards the lower end of temperatures when compared to the probabilistic forecast plot. The uncertainty in the probabilistic plot makes me think that the forecast for temperature throughout the week will be largely uncertain.
 
 ## Objective 6. Generate a forecast with parameter uncertainty
 
@@ -680,8 +678,7 @@ plot_forecast(lake_obs,
 **Q.14 (Shiny)** Can you think of potential ways to reduce parameter uncertainty?
 
 
-**Answer Q.14**
-
+**Answer Q.14** To reduce parameter uncertainty, we could collect and use more data in the forecast. 
 
 
 ## Objective 7. Generate a forecast with process uncertainty
@@ -843,7 +840,7 @@ plot_forecast(lake_obs,
 **Q.15 (Shiny)** What factors can lead to an increase in initial conditions uncertainty?
 
 
-**Answer Q.15**
+**Answer Q.15** If the forecast contains a lag or if the amount of time it takes for the initial condition to be updated it could affect the initial conditions uncertainty. 
 
 
 
@@ -927,14 +924,14 @@ plot_partitioned_uc(sd_df)
 
 **Q.16 (Shiny)** Which source of uncertainty contributes the most to total forecast uncertainty? 
 
-**Answer Q.16**
+**Answer Q.16** Parameter uncertainty seems to contribute the most to total forecast uncertainty.
 
 
 
 
 **Q.17 (Rmd)** Do you think that different water temperature forecast models would have the same or different quantities of uncertainty? Why?
 
-**Answer Q.17**
+**Answer Q.17** I think different water temperature forecast models would have similar quantities of uncertainty as the parameters that drive water temperature could be uncertain themselves.
 
 
 
@@ -996,7 +993,7 @@ model_data <- lake_df %>%
 **Answer Q.18** Edit the code block to provide your answer
 
 ```{r}
-fit <- lm(model_data$wtemp ~ model_data$wtemp_yday + model_data$airt) #INSERT ADDITIONAL COVARIATES IN THE PARENTHESES
+fit <- lm(model_data$wtemp ~ model_data$wtemp_yday + model_data$airt + model_data$wnd) #INSERT ADDITIONAL COVARIATES IN THE PARENTHESES
 fit_summary <- summary(fit)
 ```
 
@@ -1048,7 +1045,7 @@ mod_predictions_watertemp(lake_df2, pred)
 
 **Q.19** Describe the structure of the multiple linear regression model in your own words. How is water temperature being predicted? How does the structure of this model differ from the model fitted previously? 
   
-**Answer Q.19**
+**Answer Q.19** Water temperature is being predicted as a function of historic water temp., air temp., wind and shortwave radiation. This model includes more parameters than the previous model.
   
   
   
@@ -1134,7 +1131,7 @@ for(d in 2:length(forecasted_dates)) {
       filter(forecast_date == forecasted_dates[d-1])
     
   #run model - REVISE THIS!!!!!!
-    temp_pred$value <- coeffs[1] + temp_lag$value * coeffs[2] + temp_driv$air_temperature * coeffs[3] 
+    temp_pred$value <- coeffs[1] + temp_lag$value * coeffs[2] + temp_driv$air_temperature * coeffs[3] + temp_driv$wind_speed[4]
     
   #insert values back into the forecast dataframe
     forecast_driver_unc2 <- forecast_driver_unc2 %>%
@@ -1176,7 +1173,8 @@ Now, we will generate parameter distributions based on parameter estimates for t
 ```{r}
 param.df <- data.frame(beta1 = rnorm(30, coeffs[1], params_se[1]),
                  beta2 = rnorm(30, coeffs[2], params_se[2]),
-                 beta3 = rnorm(30, coeffs[3], params_se[3]))
+                 beta3 = rnorm(30, coeffs[3], params_se[3]),
+                 beta4 = rnorm(30, coeffs[4], params_se[4]))
 ```
 
 Plot each of the parameter distributions you have created. 
@@ -1223,7 +1221,7 @@ for(d in 2:length(forecasted_dates)) {
       filter(forecast_date == forecasted_dates[d-1])
     
   #run the model using parameter distributions instead of fixed values - REVISE THIS!!
-    temp_pred$value <- param.df$beta1 + temp_lag$value * param.df$beta2 + temp_driv$air_temperature * param.df$beta3 
+    temp_pred$value <- param.df$beta1 + temp_lag$value * param.df$beta2 + temp_driv$air_temperature * param.df$beta3 + temp_driv$wind_speed * param.df$beta4
     
   #insert values back into the forecast dataframe
     forecast_parameter_unc2 <- forecast_parameter_unc2 %>%
@@ -1281,7 +1279,7 @@ for(d in 2:length(forecasted_dates)) {
       filter(forecast_date == forecasted_dates[d-1])
     
   #run model - REVISE THIS!!
-    temp_pred$value <- coeffs[1] + temp_lag$value * coeffs[2] + temp_driv$air_temperature * coeffs[3] + rnorm(30, mean = 0, sd = sigma)
+    temp_pred$value <- coeffs[1] + temp_lag$value * coeffs[2] + temp_driv$air_temperature * coeffs[3] + temp_driv$wind_speed * coeffs[4] + rnorm(30, mean = 0, sd = sigma)
     
   #insert values back into the forecast dataframe
     forecast_process_unc2 <- forecast_process_unc2 %>%
@@ -1356,7 +1354,7 @@ for(d in 2:length(forecasted_dates)) {
       filter(forecast_date == forecasted_dates[d-1])
     
   #run model - REVISE THIS!!
-    temp_pred$value <- coeffs[1] + temp_lag$value * coeffs[2] + temp_driv$air_temperature * coeffs[3] 
+    temp_pred$value <- coeffs[1] + temp_lag$value * coeffs[2] + temp_driv$air_temperature * coeffs[3] + temp_driv$wind_speed * coeffs[4]
     
   #insert values back into the forecast dataframe
     forecast_ic_unc2 <- forecast_ic_unc2 %>%
@@ -1402,7 +1400,7 @@ plot_partitioned_uc(sd_df)
 
 **Q.25** Which source of uncertainty contributes the most to total forecast uncertainty for your model?
 
-**Answer Q.25**
+**Answer Q.25** Parameter uncertainty still contributes the most to the total forecast uncertainty. 
 
 **Q26** Compare how total forecast uncertainty over time differed between forecasts made with your model vs. the multiple linear regression model fitted in the module6.Rmd. Be sure to address how the contribution of each of the four sources of uncertainty (process, parameter, initial conditions & driver) is different between the two models, and why this might be. 
 
